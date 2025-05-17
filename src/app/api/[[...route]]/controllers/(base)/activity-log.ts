@@ -32,6 +32,17 @@ const app = new Hono().post(
       },
     });
 
+    await db.communityGoal.update({
+      where: {
+        id: data.goalId,
+      },
+      data: {
+        progress: {
+          increment: data.carbonSaved,
+        },
+      },
+    });
+
     return c.json({ data: log }, 201);
   }
 );

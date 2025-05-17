@@ -26,6 +26,15 @@ import { CommunityGoal } from "@prisma/client";
 import { useCreateCommunityActivityLog } from "../_api/use-create-community-activity-log";
 import { createActivityLogSchema } from "@/schema/activity-log.schema";
 import React from "react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface ActivityLogFormProps {
   goals: DateToString<CommunityGoal>[];
@@ -33,7 +42,9 @@ interface ActivityLogFormProps {
   communityId: string;
 }
 
-const activityLogSchema = createActivityLogSchema;
+const activityLogSchema = createActivityLogSchema.extend({
+  carbonSaved: z.string(),
+});
 
 type ActivityLogFormValues = z.infer<typeof activityLogSchema>;
 
@@ -46,7 +57,7 @@ export function ActivityLogForm({
     resolver: zodResolver(activityLogSchema),
     defaultValues: {
       description: "",
-      carbonSaved: 0.01,
+      carbonSaved: "0.01",
       goalId: "",
     },
   });
@@ -54,9 +65,16 @@ export function ActivityLogForm({
   const { mutate, isPending } = useCreateCommunityActivityLog(communityId);
 
   function onSubmit(values: ActivityLogFormValues) {
-    mutate(values, {
-      onSuccess: () => setOpen(false),
-    });
+    mutate(
+      {
+        ...values,
+        carbonSaved: Number(values.carbonSaved),
+        activityDate: new Date(values.activityDate),
+      },
+      {
+        onSuccess: () => setOpen(false),
+      }
+    );
   }
 
   return (
@@ -131,6 +149,50 @@ export function ActivityLogForm({
               </Select>
               <FormDescription>
                 Connect your activity to a specific community goal.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="activityDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Activity Date</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                      disabled={isPending}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) => date > new Date()}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                Select the date when you performed this activity.
               </FormDescription>
               <FormMessage />
             </FormItem>
