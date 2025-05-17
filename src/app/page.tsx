@@ -5,15 +5,12 @@ import Card from "@/components/card";
 import Carousel from "@/components/carousel";
 export default function Home() {
   return (
-   
-      <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col">
       <Header />
       <HeroSection />
       <Card />
       <Carousel />
-      <Footer/>
-   </main>
-   
+      <Footer />
+    </main>
   );
 }
-

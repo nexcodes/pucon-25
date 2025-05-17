@@ -1,15 +1,16 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { handle } from "hono/vercel";
 import {
-  community,
-  sample,
-  goals,
   activityFeed,
   activityLog,
+  gemini,
+  community,
   communityUserManageMent,
+  goals,
   invite,
+  sample,
 } from "./controllers/(base)";
-import { HTTPException } from "hono/http-exception";
 
 const app = new Hono().basePath("/api");
 
@@ -35,6 +36,7 @@ const routes = app
   .route("/goals", goals)
   .route("/activity-log", activityLog)
   .route("/activity-feed", activityFeed)
+  .route("/gemini", gemini)
   .route("/community-user-management", communityUserManageMent)
   .route("/invite", invite);
 
