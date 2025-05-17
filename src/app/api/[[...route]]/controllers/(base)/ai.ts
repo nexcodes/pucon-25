@@ -6,7 +6,7 @@ import { z } from "zod";
 
 const app = new Hono().get(
   "/:communityId",
-  zValidator("param", z.object({ communityId: z.string() })),
+  zValidator("param", z.object({ communityId: z.string().optional() })),
   async (c) => {
     const { communityId } = c.req.valid("param");
 

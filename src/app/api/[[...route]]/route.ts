@@ -10,6 +10,8 @@ import {
   goals,
   invite,
   sample,
+  analytics,
+  leaderboard,
 } from "./controllers/(base)";
 
 const app = new Hono().basePath("/api");
@@ -38,7 +40,9 @@ const routes = app
   .route("/activity-feed", activityFeed)
   .route("/gemini", gemini)
   .route("/community-user-management", communityUserManageMent)
-  .route("/invite", invite);
+  .route("/invite", invite)
+  .route("/analytics", analytics)
+  .route("/leaderboard", leaderboard);
 
 export const GET = handle(app);
 export const POST = handle(app);
