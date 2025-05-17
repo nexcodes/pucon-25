@@ -69,9 +69,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/Contactus" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
+                <Link href="/Community" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
                   <ArrowUpRight size={14} className="mr-2 text-green-700" />
-                  Contact
+                  Community
                 </Link>
               </li>
               <li>
@@ -85,12 +85,12 @@ const Footer = () => {
           
           {/* Services */}
           <div className="lg:col-span-2">
-            <h3 className="text-green-300 font-semibold mb-4 text-sm uppercase tracking-wider">Services</h3>
+            <h3 className="text-green-300 font-semibold mb-4 text-sm uppercase tracking-wider">Personal Space</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/recycling" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
+                <Link href="/personal_space" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
                   <ArrowUpRight size={14} className="mr-2 text-green-700" />
-                  Recycling
+                  Personal Space
                 </Link>
               </li>
               <li>
@@ -124,7 +124,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start">
                 <Phone size={16} className="text-green-500 mr-3 mt-1 flex-shrink-0" />
-                <span className="text-gray-400 text-sm">+1 (555) 123-4567</span>
+                <span className="text-gray-400 text-sm">+0 (000) 123-4567</span>
               </li>
               <li className="flex items-start">
                 <MapPin size={16} className="text-green-500 mr-3 mt-1 flex-shrink-0" />
