@@ -11,6 +11,7 @@ const HeroSection: FC<HeroSectionProps> = ({
   title = "Reduce Your Carbon Footprint Together",
   subtitle = "Join our community of eco-conscious individuals making a difference for our planet. Small changes today create a sustainable tomorrow.",
   buttonText = "Join Our Community"
+  
 }) => {
   return (
     <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
@@ -38,7 +39,7 @@ const HeroSection: FC<HeroSectionProps> = ({
           {subtitle}
         </p>
         <a 
-          href="#" 
+          href="/community" 
           className="inline-block px-6 py-3 bg-green-600 text-white font-bold rounded-full transition-all duration-300 hover:bg-green-700 hover:-translate-y-1 hover:shadow-lg"
         >
           {buttonText}
