@@ -95,8 +95,7 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
               <NavLink href="/" label="Home" />
-              <NavLink href="/Aboutus" label="About Us" />
-              <NavLink href="/Community" label="Community" />
+              <NavLink href="/community" label="Community" />
               <NavLink href="/leaderboard" label="Leaderboard" />
               <NavLink href="/calculator" label="Carbon Emission Calculator" />
 
@@ -153,18 +152,8 @@ const Header = () => {
             <div className="flex flex-col space-y-4">
               <MobileNavLink href="/" label="Home" onClick={toggleMenu} />
               <MobileNavLink
-                href="/Aboutus"
-                label="About Us"
-                onClick={toggleMenu}
-              />
-              <MobileNavLink
-                href="/Community"
+                href="/community"
                 label="Communities"
-                onClick={toggleMenu}
-              />
-              <MobileNavLink
-                href="/personal Space"
-                label="Personal Space"
                 onClick={toggleMenu}
               />
               <MobileNavLink
