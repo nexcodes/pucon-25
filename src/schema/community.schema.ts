@@ -7,10 +7,7 @@ export const communitySchema = z.object({
     .string()
     .min(2, "Community name must be at least 2 characters")
     .max(100, "Community name cannot exceed 100 characters"),
-  description: z
-    .string()
-    .max(500, "Description cannot exceed 500 characters")
-    .optional(),
+  description: z.string().max(500, "Description cannot exceed 500 characters"),
   niche: z.nativeEnum(CommunityNiche),
 });
 

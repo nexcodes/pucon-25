@@ -103,13 +103,13 @@ export default function CommunitiesPage() {
                   Created{" "}
                   {format(new Date(community.createdAt), "dd MMM, yyyy")}
                 </div>
-                <Link href={`/communities/${community.id}`}>
+                <Link href={`/community/${community.id}`}>
                   <Button
                     variant="ghost"
                     size="sm"
                     className="group hover:bg-green-100 hover:text-green-700 dark:hover:bg-green-900/30 dark:hover:text-green-400 transition-colors"
                   >
-                    View Details
+                    Visit Community
                     <ArrowRight className="ml-1 h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
                   </Button>
                 </Link>

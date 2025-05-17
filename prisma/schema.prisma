@@ -86,6 +86,7 @@ model Community {
     members     CommunityMember[] // Members of the community
     goals       CommunityGoal[] // Community-wide goals
     posts       ActivityPost[] // Community activity feed posts
+    ActivityLog ActivityLog[]
 
     @@map("community")
 }
@@ -107,46 +108,36 @@ model CommunityMember {
 
 // Community goals model
 model CommunityGoal {
-    id          String    @id @default(cuid())
+    id          String        @id @default(cuid())
     communityId String
-    community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+    community   Community     @relation(fields: [communityId], references: [id], onDelete: Cascade)
     title       String
-    description String?
+    description String @default("description")
     targetValue Float // e.g., tons of CO2 to reduce
-    progress    Float     @default(0.0) // Current progress towards goal
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+    progress    Float         @default(0.0) // Current progress towards goal
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
     createdById String
-    createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+    createdBy   User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
+    ActivityLog ActivityLog[]
 
     @@map("community_goal")
 }
 
-// Personal goals model
-model PersonalGoal {
-    id          String   @id @default(cuid())
-    userId      String
-    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    title       String
-    description String?
-    targetValue Float // e.g., tons of CO2 to reduce
-    progress    Float    @default(0.0) // Current progress towards goal
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-
-    @@map("personal_goal")
-}
-
 // Activity log for carbon footprint reduction
 model ActivityLog {
-    id           String   @id @default(cuid())
+    id           String        @id @default(cuid())
     userId       String
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    communityId  String
+    community    Community     @relation(fields: [communityId], references: [id], onDelete: Cascade)
+    goalId       String
+    goal         CommunityGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
     description  String
     carbonSaved  Float // Amount of CO2 saved (in tons)
     activityDate DateTime
-    createdAt    DateTime @default(now())
-    updatedAt    DateTime @updatedAt
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
 
     @@map("activity_log")
 }
@@ -163,6 +154,21 @@ model ActivityPost {
     updatedAt   DateTime  @updatedAt
 
     @@map("activity_post")
+}
+
+// Personal goals model
+model PersonalGoal {
+    id          String   @id @default(cuid())
+    userId      String
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    title       String
+    description String
+    targetValue Float // e.g., tons of CO2 to reduce
+    progress    Float    @default(0.0) // Current progress towards goal
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@map("personal_goal")
 }
 
 // ENUMS
