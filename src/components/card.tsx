@@ -14,7 +14,7 @@ const features = [
       'Monitor and reduce your environmental impact with our intuitive tracking tools and personalized recommendations.',
     background: '/card1.jpg',
     color: 'from-green-600/70',
-    link: '/personal-space',
+    link: '/calculator',
     secondaryIcon: <Leaf className="h-4 w-4" />,
   },
   {
