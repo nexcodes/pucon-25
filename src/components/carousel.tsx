@@ -28,7 +28,7 @@ const LogoCarousel = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          Partnered with Trusted Institutions
+          Powering the Carbon-Free Future
         </motion.h2>
 
         {/* Top Scroll Row */}
@@ -99,8 +99,7 @@ const LogoCarousel = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          Building a safer Pakistan with the help of leading institutions and
-          legal support communities.
+          Building a safer, greener Pakistan with the support of world-renowned climate and sustainability organizations.
         </motion.p>
       </div>
     </section>
