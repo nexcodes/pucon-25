@@ -27,7 +27,7 @@ import {
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
-import { CommunityMember, User } from "@prisma/client";
+import { CommunityMember, Role, User } from "@prisma/client";
 import { DateToString } from "@/types/utils";
 import { useAdminRemoveUserFromCommunity } from "../_api/use-admin-remove-user-from-community";
 import { useAdminUpdateMemberRoleInCommunity } from "../_api/use-admin-update-member-role-in-community";
@@ -52,7 +52,7 @@ export function UserManagementDialog({
       member.user.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const getRoleBadge = (role: string) => {
+  const getRoleBadge = (role: Role) => {
     switch (role) {
       case "ADMIN":
         return (
@@ -61,7 +61,7 @@ export function UserManagementDialog({
             Admin
           </Badge>
         );
-      case "LEADER":
+      case "COMMUNITY_LEADER":
         return (
           <Badge className="bg-blue-500 hover:bg-blue-600">
             <ShieldCheck className="mr-1 h-3 w-3" />
