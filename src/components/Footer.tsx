@@ -88,25 +88,20 @@ const Footer = () => {
             <h3 className="text-green-300 font-semibold mb-4 text-sm uppercase tracking-wider">Personal Space</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/personal_space" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
+                <Link href="/Calculator" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
                   <ArrowUpRight size={14} className="mr-2 text-green-700" />
-                  Personal Space
+                  Carbon Calculator
                 </Link>
               </li>
               <li>
-                <Link href="/renewable-energy" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
+                <Link href="/leaderboard" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
                   <ArrowUpRight size={14} className="mr-2 text-green-700" />
-                  Renewable Energy
+                  LeaderBoard
                 </Link>
               </li>
+              
               <li>
-                <Link href="/water-conservation" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
-                  <ArrowUpRight size={14} className="mr-2 text-green-700" />
-                  Water Conservation
-                </Link>
-              </li>
-              <li>
-                <Link href="/carbon-footprint" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
+                <Link href="/calculator" className="text-gray-400 hover:text-green-400 text-sm flex items-center transition-colors duration-300">
                   <ArrowUpRight size={14} className="mr-2 text-green-700" />
                   Carbon Footprint
                 </Link>
