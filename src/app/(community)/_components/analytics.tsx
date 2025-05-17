@@ -1,12 +1,5 @@
-import React from "react";
-import { useGetAnalyticsByCommunity } from "../_api/use-get-analyics-by-community";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Spinner } from "@/components/spinner";
-import {
-  CalendarIcon,
-  LeafIcon,
-  TrendingUpIcon,
-  UsersIcon,
-} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -15,14 +8,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
+import {
+  CalendarIcon,
+  LeafIcon,
+  TrendingUpIcon,
+  UsersIcon,
+} from "lucide-react";
 
 export default function AnalyticsBoard({
-  communityId,
+  data,
+  isLoading,
 }: {
-  communityId: string;
+  data: any;
+  isLoading: boolean;
 }) {
-  const { data, isLoading } = useGetAnalyticsByCommunity(communityId);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -35,17 +34,40 @@ export default function AnalyticsBoard({
     return null;
   }
 
-  const { goals, metrics } = data;
+  const { goals = [], metrics = {} } = data || {};
 
-  // Format dates for display
-  const lastActivityFormatted = formatDistanceToNow(
-    new Date(metrics.lastActivityDate || new Date()),
-    { addSuffix: true }
-  );
-  const firstActivityFormatted = formatDistanceToNow(
-    new Date(metrics.firstActivityDate || new Date()),
-    { addSuffix: true }
-  );
+  // Safely format dates with fallbacks for null/undefined values
+  const safeFormatDistance = (dateString: string | null | undefined) => {
+    if (!dateString) return "N/A";
+    try {
+      return formatDistanceToNow(new Date(dateString), { addSuffix: true });
+    } catch (error) {
+      return "N/A";
+    }
+  };
+
+  const lastActivityFormatted = safeFormatDistance(metrics?.lastActivityDate);
+  const firstActivityFormatted = safeFormatDistance(metrics?.firstActivityDate);
+
+  // Safe date formatting helper
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return "N/A";
+    try {
+      return new Date(dateString).toLocaleDateString();
+    } catch (error) {
+      return "N/A";
+    }
+  };
+
+  // Safe time formatting helper
+  const formatTime = (dateString: string | null | undefined) => {
+    if (!dateString) return "N/A";
+    try {
+      return new Date(dateString).toLocaleTimeString();
+    } catch (error) {
+      return "N/A";
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -62,12 +84,12 @@ export default function AnalyticsBoard({
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-gray-800">
-                {metrics.totalCarbonSaved.toFixed(2)}{" "}
+                {(metrics?.totalCarbonSaved || 0).toFixed(2)}{" "}
                 <span className="text-lg">tons</span>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Avg. {metrics.averageCarbonPerActivity.toFixed(2)} tons per
-                activity
+                Avg. {(metrics?.averageCarbonPerActivity || 0).toFixed(2)} tons
+                per activity
               </p>
             </CardContent>
           </Card>
@@ -83,7 +105,7 @@ export default function AnalyticsBoard({
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-gray-800">
-                {metrics.totalActivities}
+                {metrics?.totalActivities || 0}
               </div>
               <p className="text-xs text-gray-500 mt-1">
                 Last activity {lastActivityFormatted}
@@ -102,10 +124,10 @@ export default function AnalyticsBoard({
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-gray-800">
-                {metrics.uniqueContributors}
+                {metrics?.uniqueContributors || 0}
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Active member{metrics.uniqueContributors > 1 ? "s" : ""}
+                Active member{(metrics?.uniqueContributors || 0) > 1 ? "s" : ""}
               </p>
             </CardContent>
           </Card>
@@ -121,13 +143,8 @@ export default function AnalyticsBoard({
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold text-gray-800">
-                {new Date(
-                  metrics.firstActivityDate || new Date()
-                ).toLocaleDateString()}{" "}
-                -{" "}
-                {new Date(
-                  metrics.lastActivityDate || new Date()
-                ).toLocaleDateString()}
+                {formatDate(metrics?.firstActivityDate)} -{" "}
+                {formatDate(metrics?.lastActivityDate)}
               </div>
               <p className="text-xs text-gray-500 mt-1">
                 First activity {firstActivityFormatted}
@@ -142,41 +159,51 @@ export default function AnalyticsBoard({
             Goals
           </h2>
           <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1">
-            {goals.map((goal) => (
-              <Card
-                key={goal.id}
-                className="border-gray-200 bg-white shadow-md hover:shadow-lg transition-shadow"
-              >
-                <CardHeader>
-                  <CardTitle className="text-gray-800">{goal.title}</CardTitle>
-                  <CardDescription className="text-gray-600">
-                    Target: {goal.targetValue} tons of carbon saved
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">
-                        Progress
-                      </span>
-                      <span className="text-sm font-medium text-gray-700">
-                        {goal.completionPercentage}%
-                      </span>
+            {Array.isArray(goals) && goals.length > 0 ? (
+              goals.map((goal: any) => (
+                <Card
+                  key={goal.id}
+                  className="border-gray-200 bg-white shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <CardHeader>
+                    <CardTitle className="text-gray-800">
+                      {goal.title}
+                    </CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Target: {goal.targetValue} tons of carbon saved
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">
+                          Progress
+                        </span>
+                        <span className="text-sm font-medium text-gray-700">
+                          {goal.completionPercentage}%
+                        </span>
+                      </div>
+                      <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-green-500 rounded-full transition-all duration-500 ease-in-out"
+                          style={{ width: `${goal.completionPercentage}%` }}
+                        />
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-500 pt-1">
+                        <span>Current: {goal.progress} tons</span>
+                        <span>Target: {goal.targetValue} tons</span>
+                      </div>
                     </div>
-                    <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-green-500 rounded-full transition-all duration-500 ease-in-out"
-                        style={{ width: `${goal.completionPercentage}%` }}
-                      />
-                    </div>
-                    <div className="flex justify-between text-xs text-gray-500 pt-1">
-                      <span>Current: {goal.progress} tons</span>
-                      <span>Target: {goal.targetValue} tons</span>
-                    </div>
-                  </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <Card className="border-gray-200 bg-white shadow-md hover:shadow-lg transition-shadow">
+                <CardContent className="text-center p-6">
+                  <p className="text-gray-500">No goals found</p>
                 </CardContent>
               </Card>
-            ))}
+            )}
           </div>
         </div>
 
@@ -195,19 +222,14 @@ export default function AnalyticsBoard({
                       <LeafIcon className="h-4 w-4 text-green-600" />
                     </div>
                     <div>
-                      {metrics.firstActivityDate && (
+                      {metrics?.firstActivityDate && (
                         <>
                           <p className="font-medium text-gray-800">
                             First Activity Recorded
                           </p>
                           <p className="text-sm text-gray-500">
-                            {new Date(
-                              metrics.firstActivityDate
-                            ).toLocaleDateString()}{" "}
-                            at{" "}
-                            {new Date(
-                              metrics.firstActivityDate
-                            ).toLocaleTimeString()}
+                            {formatDate(metrics.firstActivityDate)} at{" "}
+                            {formatTime(metrics.firstActivityDate)}
                           </p>
                         </>
                       )}
@@ -222,13 +244,8 @@ export default function AnalyticsBoard({
                         Latest Activity
                       </p>
                       <p className="text-sm text-gray-500">
-                        {new Date(
-                          metrics.lastActivityDate as string
-                        ).toLocaleDateString()}{" "}
-                        at{" "}
-                        {new Date(
-                          metrics.lastActivityDate as string
-                        ).toLocaleTimeString()}
+                        {formatDate(metrics?.lastActivityDate)} at{" "}
+                        {formatTime(metrics?.lastActivityDate)}
                       </p>
                     </div>
                   </div>
@@ -239,8 +256,14 @@ export default function AnalyticsBoard({
                     <div>
                       <p className="font-medium text-gray-800">Goal Created</p>
                       <p className="text-sm text-gray-500">
-                        {new Date(goals[0].createdAt).toLocaleDateString()} at{" "}
-                        {new Date(goals[0].createdAt).toLocaleTimeString()}
+                        {Array.isArray(goals) && goals.length > 0 ? (
+                          <>
+                            {formatDate(goals[0]?.createdAt)} at{" "}
+                            {formatTime(goals[0]?.createdAt)}
+                          </>
+                        ) : (
+                          "No goals created yet"
+                        )}
                       </p>
                     </div>
                   </div>

@@ -18,6 +18,7 @@ import { ActivityFeed } from "./activity-feed";
 import AiInsight from "./ai-insight";
 import AnalyticsBoard from "./analytics";
 import { Leaderboard } from "./leaderboard";
+import { useGetAnalyticsByCommunity } from "../_api/use-get-analyics-by-community";
 
 export type FullCommunity = DateToString<Community> & {
   _count: {
@@ -44,6 +45,8 @@ interface CommunityDashboardProps {
 }
 
 export function CommunityDashboard({ community }: CommunityDashboardProps) {
+  const { data, isLoading } = useGetAnalyticsByCommunity(community.id);
+
   return (
     <div className="container mx-auto py-6 px-4 md:px-6">
       <CommunityHeader community={community} />
@@ -73,7 +76,7 @@ export function CommunityDashboard({ community }: CommunityDashboardProps) {
           <ActivityFeed communityId={community.id} posts={community.posts} />
         </TabsContent>
         <TabsContent value="dashboard">
-          <AnalyticsBoard communityId={community.id} />
+          <AnalyticsBoard data={data} isLoading={isLoading} />
         </TabsContent>
         <TabsContent value="ai">
           <AiInsight communityId={community.id} />
