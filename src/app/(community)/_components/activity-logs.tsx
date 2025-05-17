@@ -25,9 +25,10 @@ interface ActivityLogsProps {
     goal: DateToString<CommunityGoal>;
   })[];
   goals: DateToString<CommunityGoal>[];
+  communityId: string;
 }
 
-export function ActivityLogs({ logs, goals }: ActivityLogsProps) {
+export function ActivityLogs({ logs, goals, communityId }: ActivityLogsProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -52,7 +53,11 @@ export function ActivityLogs({ logs, goals }: ActivityLogsProps) {
                 goals
               </DialogDescription>
             </DialogHeader>
-            <ActivityLogForm goals={goals} />
+            <ActivityLogForm
+              communityId={communityId}
+              goals={goals}
+              setOpen={setOpen}
+            />
           </DialogContent>
         </Dialog>
       </div>

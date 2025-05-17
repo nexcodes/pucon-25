@@ -112,7 +112,7 @@ model CommunityGoal {
     communityId String
     community   Community     @relation(fields: [communityId], references: [id], onDelete: Cascade)
     title       String
-    description String @default("description")
+    description String        @default("description")
     targetValue Float // e.g., tons of CO2 to reduce
     progress    Float         @default(0.0) // Current progress towards goal
     createdAt   DateTime      @default(now())

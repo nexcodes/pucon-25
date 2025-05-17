@@ -54,15 +54,19 @@ export function CommunityDashboard({ community }: CommunityDashboardProps) {
         </TabsList>
 
         <TabsContent value="goals" className="space-y-4">
-          <GoalsList goals={community.goals} />
+          <GoalsList communityId={community.id} goals={community.goals} />
         </TabsContent>
 
         <TabsContent value="logs">
-          <ActivityLogs logs={community.ActivityLog} goals={community.goals} />
+          <ActivityLogs
+            communityId={community.id}
+            logs={community.ActivityLog}
+            goals={community.goals}
+          />
         </TabsContent>
 
         <TabsContent value="feed">
-          <ActivityFeed posts={community.posts} />
+          <ActivityFeed communityId={community.id} posts={community.posts} />
         </TabsContent>
       </Tabs>
     </div>

@@ -1,6 +1,12 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import { community, sample } from "./controllers/(base)";
+import {
+  community,
+  sample,
+  goals,
+  activityFeed,
+  activityLog,
+} from "./controllers/(base)";
 import { HTTPException } from "hono/http-exception";
 
 const app = new Hono().basePath("/api");
@@ -21,7 +27,12 @@ app.onError((err, c) => {
   return c.json({ message: "Internal Error" }, 500);
 });
 
-const routes = app.route("/sample", sample).route("/community", community);
+const routes = app
+  .route("/sample", sample)
+  .route("/community", community)
+  .route("/goals", goals)
+  .route("/activity-log", activityLog)
+  .route("/activity-feed", activityFeed);
 
 export const GET = handle(app);
 export const POST = handle(app);

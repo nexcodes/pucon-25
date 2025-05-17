@@ -23,24 +23,25 @@ import {
 } from "@/components/ui/select";
 import { DateToString } from "@/types/utils";
 import { CommunityGoal } from "@prisma/client";
+import { useCreateCommunityActivityLog } from "../_api/use-create-community-activity-log";
+import { createActivityLogSchema } from "@/schema/activity-log.schema";
+import React from "react";
 
 interface ActivityLogFormProps {
   goals: DateToString<CommunityGoal>[];
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  communityId: string;
 }
 
-const activityLogSchema = z.object({
-  description: z.string().min(5, {
-    message: "Description must be at least 5 characters.",
-  }),
-  carbonSaved: z.coerce.number().positive({
-    message: "Carbon saved must be a positive number.",
-  }),
-  goalId: z.string().optional(),
-});
+const activityLogSchema = createActivityLogSchema;
 
 type ActivityLogFormValues = z.infer<typeof activityLogSchema>;
 
-export function ActivityLogForm({ goals }: ActivityLogFormProps) {
+export function ActivityLogForm({
+  goals,
+  setOpen,
+  communityId,
+}: ActivityLogFormProps) {
   const form = useForm<ActivityLogFormValues>({
     resolver: zodResolver(activityLogSchema),
     defaultValues: {
@@ -50,7 +51,13 @@ export function ActivityLogForm({ goals }: ActivityLogFormProps) {
     },
   });
 
-  function onSubmit(values: ActivityLogFormValues) {}
+  const { mutate, isPending } = useCreateCommunityActivityLog(communityId);
+
+  function onSubmit(values: ActivityLogFormValues) {
+    mutate(values, {
+      onSuccess: () => setOpen(false),
+    });
+  }
 
   return (
     <Form {...form}>
@@ -63,6 +70,7 @@ export function ActivityLogForm({ goals }: ActivityLogFormProps) {
               <FormLabel>Activity Description</FormLabel>
               <FormControl>
                 <Input
+                  disabled={isPending}
                   placeholder="Used public transport instead of driving"
                   {...field}
                 />
@@ -82,7 +90,12 @@ export function ActivityLogForm({ goals }: ActivityLogFormProps) {
             <FormItem>
               <FormLabel>Carbon Saved (tons)</FormLabel>
               <FormControl>
-                <Input type="number" step="0.01" {...field} />
+                <Input
+                  disabled={isPending}
+                  type="number"
+                  step="0.01"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 Estimate how much carbon was saved by your activity.
@@ -98,7 +111,11 @@ export function ActivityLogForm({ goals }: ActivityLogFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Related Goal</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                disabled={isPending}
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a goal (optional)" />
@@ -121,6 +138,7 @@ export function ActivityLogForm({ goals }: ActivityLogFormProps) {
         />
 
         <Button
+          disabled={isPending}
           type="submit"
           className="w-full bg-green-500 hover:bg-green-600"
         >

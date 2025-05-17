@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { useCreateCommunityActivityFeed } from "../_api/use-create-community-activity-feed";
 
 const postFormSchema = z.object({
   content: z.string().min(5, {
@@ -23,7 +24,13 @@ const postFormSchema = z.object({
 
 type PostFormValues = z.infer<typeof postFormSchema>;
 
-export function ActivityPostForm() {
+export function ActivityPostForm({
+  communityId,
+  setOpen,
+}: {
+  communityId: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const form = useForm<PostFormValues>({
     resolver: zodResolver(postFormSchema),
     defaultValues: {
@@ -31,7 +38,15 @@ export function ActivityPostForm() {
     },
   });
 
-  function handleSubmit(values: PostFormValues) {}
+  const { mutate, isPending } = useCreateCommunityActivityFeed(communityId);
+
+  function handleSubmit(values: PostFormValues) {
+    mutate(values, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
+  }
 
   return (
     <Form {...form}>
@@ -47,6 +62,7 @@ export function ActivityPostForm() {
               <FormLabel>Post Content</FormLabel>
               <FormControl>
                 <Textarea
+                  disabled={isPending}
                   placeholder="Share your eco-friendly experiences, tips, or thoughts..."
                   className="min-h-[120px]"
                   {...field}
@@ -61,6 +77,7 @@ export function ActivityPostForm() {
         />
 
         <Button
+          disabled={isPending}
           type="submit"
           className="w-full bg-green-500 hover:bg-green-600"
         >

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,35 +21,35 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { createCommunityGoalSchema } from "@/schema/community-goal.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusCircle } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useCreateCommunityGoal } from "../_api/use-create-community-goal";
 import * as z from "zod";
 
-const goalFormSchema = z.object({
-  title: z.string().min(3, {
-    message: "Title must be at least 3 characters.",
-  }),
-  description: z.string().optional(),
-  targetValue: z.coerce.number().positive({
-    message: "Target value must be a positive number.",
-  }),
+const goalFormSchema = createCommunityGoalSchema.extend({
+  targetValue: z.string(),
 });
 
-export function GoalForm() {
-  const [open, setOpen] = useState(false);
+type FormValues = z.infer<typeof goalFormSchema>;
 
-  const form = useForm({
+export function GoalForm({ communityId }: { communityId: string }) {
+  const [open, setOpen] = useState(false);
+  const { mutate, isPending } = useCreateCommunityGoal(communityId);
+  const form = useForm<FormValues>({
     resolver: zodResolver(goalFormSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      targetValue: 1,
-    },
   });
 
-  function onSubmit(values) {
-    console.log(values);
+  function onSubmit(values: FormValues) {
+    mutate(
+      {
+        ...values,
+        targetValue: Number(values.targetValue),
+      },
+      { onSuccess: () => setOpen(false) }
+    );
   }
 
   return (
@@ -82,6 +81,7 @@ export function GoalForm() {
                   <FormLabel>Goal Title</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={isPending}
                       placeholder="Reduce carbon footprint by 10%"
                       {...field}
                     />
@@ -102,6 +102,7 @@ export function GoalForm() {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
+                      disabled={isPending}
                       placeholder="Describe the goal and how members can contribute"
                       {...field}
                       value={field.value || ""}
@@ -123,7 +124,12 @@ export function GoalForm() {
                 <FormItem>
                   <FormLabel>Target Value (tons of CO2)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.01" {...field} />
+                    <Input
+                      disabled={isPending}
+                      type="number"
+                      step="0.01"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     The amount of CO2 (in tons) you aim to reduce.
@@ -134,7 +140,11 @@ export function GoalForm() {
             />
 
             <DialogFooter>
-              <Button type="submit" className="bg-green-500 hover:bg-green-600">
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="bg-green-500 hover:bg-green-600"
+              >
                 Create Goal
               </Button>
             </DialogFooter>

@@ -22,9 +22,10 @@ interface ActivityFeedProps {
   posts: (DateToString<ActivityPost> & {
     user: DateToString<User>;
   })[];
+  communityId: string;
 }
 
-export function ActivityFeed({ posts }: ActivityFeedProps) {
+export function ActivityFeed({ posts, communityId }: ActivityFeedProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -48,7 +49,7 @@ export function ActivityFeed({ posts }: ActivityFeedProps) {
                 Share your thoughts, experiences, or tips with the community
               </DialogDescription>
             </DialogHeader>
-            <ActivityPostForm />
+            <ActivityPostForm setOpen={setOpen} communityId={communityId} />
           </DialogContent>
         </Dialog>
       </div>

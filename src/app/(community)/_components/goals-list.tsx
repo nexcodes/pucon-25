@@ -15,15 +15,17 @@ import { DateToString } from "@/types/utils";
 import { CommunityGoal, User } from "@prisma/client";
 import { format } from "date-fns";
 export function GoalsList({
+  communityId,
   goals,
 }: {
+  communityId: string;
   goals: DateToString<CommunityGoal & { createdBy: User }>[];
 }) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Community Goals</h2>
-        <GoalForm />
+        <GoalForm communityId={communityId} />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

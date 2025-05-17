@@ -5,7 +5,7 @@ import { Users } from "lucide-react";
 interface CommunityHeaderProps {
   community: {
     name: string;
-    description: string;
+    description: string | null;
     niche: string;
     memberCount?: number;
   };
