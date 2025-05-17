@@ -57,6 +57,11 @@ const app = new Hono()
               user: true,
             },
           },
+          CommunityInvite: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
 
