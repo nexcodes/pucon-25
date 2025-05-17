@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner } from "@/components/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,23 +12,41 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { DateToString } from "@/types/utils";
+import { Community } from "@prisma/client";
+import { format } from "date-fns";
 import {
   ArrowRight,
   Calendar,
   PlusCircle,
   Search,
   TreePine,
+  UserPlus,
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { getNicheInfo } from "../_utils";
+import { useState } from "react";
 import { useGetCommunities } from "../_api/use-get-communities";
-import { Spinner } from "@/components/spinner";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { CommunityInviteDialog } from "../_components/community-invite-dialog";
+import { getNicheInfo } from "../_utils";
+
+export type CommunityWithCount = DateToString<Community> & {
+  _count: {
+    members: number;
+  };
+};
 
 export default function CommunitiesPage() {
   const { data: communities, isLoading } = useGetCommunities();
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [selectedCommunity, setSelectedCommunity] =
+    useState<CommunityWithCount | null>(null);
+
+  const handleOpenInviteDialog = (community: CommunityWithCount) => {
+    setSelectedCommunity(community);
+    setInviteDialogOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -103,16 +122,27 @@ export default function CommunitiesPage() {
                   Created{" "}
                   {format(new Date(community.createdAt), "dd MMM, yyyy")}
                 </div>
-                <Link href={`/community/${community.id}`}>
+                <div className="flex space-x-2">
+                  <Link href={`/community/${community.id}`}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="group hover:bg-green-100 hover:text-green-700 dark:hover:bg-green-900/30 dark:hover:text-green-400 transition-colors"
+                    >
+                      Visit
+                      <ArrowRight className="ml-1 h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </Button>
+                  </Link>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
-                    className="group hover:bg-green-100 hover:text-green-700 dark:hover:bg-green-900/30 dark:hover:text-green-400 transition-colors"
+                    className="group hover:bg-green-100 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-900/30 dark:hover:text-green-400 dark:hover:border-green-700 transition-colors"
+                    onClick={() => handleOpenInviteDialog(community)}
                   >
-                    Visit Community
-                    <ArrowRight className="ml-1 h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    <UserPlus className="mr-1 h-3.5 w-3.5" />
+                    Invite
                   </Button>
-                </Link>
+                </div>
               </CardFooter>
             </Card>
           ))}
@@ -139,6 +169,14 @@ export default function CommunitiesPage() {
           </div>
         )}
       </div>
+
+      {selectedCommunity && (
+        <CommunityInviteDialog
+          open={inviteDialogOpen}
+          onOpenChange={setInviteDialogOpen}
+          community={selectedCommunity}
+        />
+      )}
     </div>
   );
 }

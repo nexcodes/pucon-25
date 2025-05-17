@@ -9,42 +9,41 @@ import {
   ActivityPost,
   CommunityMember,
   User,
+  CommunityInvite,
 } from "@prisma/client";
 import { CommunityHeader } from "./community-header";
 import { GoalsList } from "./goals-list";
 import { ActivityLogs } from "./activity-logs";
 import { ActivityFeed } from "./activity-feed";
 
-interface CommunityDashboardProps {
-  community: DateToString<Community> & {
-    _count: {
-      members: number;
-    };
-    goals: DateToString<CommunityGoal & { createdBy: User }>[];
-    ActivityLog: (DateToString<ActivityLog> & {
-      user: DateToString<User>;
-      goal: DateToString<CommunityGoal>;
-    })[];
-    posts: (DateToString<ActivityPost> & {
-      user: DateToString<User>;
-    })[];
-    members: (DateToString<CommunityMember> & {
-      user: DateToString<User>;
-    })[];
+export type FullCommunity = DateToString<Community> & {
+  _count: {
+    members: number;
   };
+  goals: DateToString<CommunityGoal & { createdBy: User }>[];
+  ActivityLog: (DateToString<ActivityLog> & {
+    user: DateToString<User>;
+    goal: DateToString<CommunityGoal>;
+  })[];
+  posts: (DateToString<ActivityPost> & {
+    user: DateToString<User>;
+  })[];
+  members: (DateToString<CommunityMember> & {
+    user: DateToString<User>;
+  })[];
+  CommunityInvite: (DateToString<CommunityInvite> & {
+    user: DateToString<User>;
+  })[];
+};
+
+interface CommunityDashboardProps {
+  community: FullCommunity;
 }
 
 export function CommunityDashboard({ community }: CommunityDashboardProps) {
   return (
     <div className="container mx-auto py-6 px-4 md:px-6">
-      <CommunityHeader
-        community={{
-          name: community.name,
-          description: community.description,
-          niche: community.niche,
-          memberCount: community._count.members,
-        }}
-      />
+      <CommunityHeader community={community} />
 
       <Tabs defaultValue="goals" className="mt-6">
         <TabsList className="grid w-full grid-cols-3 mb-8">

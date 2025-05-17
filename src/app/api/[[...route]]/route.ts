@@ -6,6 +6,8 @@ import {
   goals,
   activityFeed,
   activityLog,
+  communityUserManageMent,
+  invite,
 } from "./controllers/(base)";
 import { HTTPException } from "hono/http-exception";
 
@@ -32,7 +34,9 @@ const routes = app
   .route("/community", community)
   .route("/goals", goals)
   .route("/activity-log", activityLog)
-  .route("/activity-feed", activityFeed);
+  .route("/activity-feed", activityFeed)
+  .route("/community-user-management", communityUserManageMent)
+  .route("/invite", invite);
 
 export const GET = handle(app);
 export const POST = handle(app);
