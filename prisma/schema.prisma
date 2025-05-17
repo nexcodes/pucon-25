@@ -76,13 +76,13 @@ model Verification {
     @@map("verification")
 }
 
-// Community model
 model Community {
     id          String            @id @default(cuid())
     name        String
     description String?
-    createdAt   DateTime
-    updatedAt   DateTime
+    niche       CommunityNiche // Specific focus of the community
+    createdAt   DateTime          @default(now())
+    updatedAt   DateTime          @updatedAt
     members     CommunityMember[] // Members of the community
     goals       CommunityGoal[] // Community-wide goals
     posts       ActivityPost[] // Community activity feed posts
@@ -98,8 +98,8 @@ model CommunityMember {
     communityId String
     community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
     role        Role      @default(USER)
-    joinedAt    DateTime
-    updatedAt   DateTime
+    joinedAt    DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
 
     @@unique([userId, communityId])
     @@map("community_member")
@@ -114,8 +114,8 @@ model CommunityGoal {
     description String?
     targetValue Float // e.g., tons of CO2 to reduce
     progress    Float     @default(0.0) // Current progress towards goal
-    createdAt   DateTime
-    updatedAt   DateTime
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
     createdById String
     createdBy   User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
@@ -131,8 +131,8 @@ model PersonalGoal {
     description String?
     targetValue Float // e.g., tons of CO2 to reduce
     progress    Float    @default(0.0) // Current progress towards goal
-    createdAt   DateTime
-    updatedAt   DateTime
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 
     @@map("personal_goal")
 }
@@ -145,8 +145,8 @@ model ActivityLog {
     description  String
     carbonSaved  Float // Amount of CO2 saved (in tons)
     activityDate DateTime
-    createdAt    DateTime
-    updatedAt    DateTime
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
 
     @@map("activity_log")
 }
@@ -158,9 +158,9 @@ model ActivityPost {
     user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     communityId String
     community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
-    content     String // Text content of the post (tips, resources, etc.)
-    createdAt   DateTime
-    updatedAt   DateTime
+    content     String    @db.Text
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
 
     @@map("activity_post")
 }
@@ -171,4 +171,14 @@ enum Role {
     USER
     COMMUNITY_LEADER
     ADMIN
+}
+
+enum CommunityNiche {
+    SUSTAINABLE_TRANSPORT
+    RENEWABLE_ENERGY
+    ZERO_WASTE
+    ECO_FRIENDLY_DIET
+    GREEN_TECH
+    SUSTAINABLE_FASHION
+    URBAN_GARDENING
 }

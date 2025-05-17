@@ -1,5 +1,11 @@
+import { Toaster } from "../ui/sonner";
 import { QueryProvider } from "./query-provider";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-  return <QueryProvider>{children}</QueryProvider>;
+  return (
+    <QueryProvider>
+      <Toaster richColors />
+      {children}
+    </QueryProvider>
+  );
 };

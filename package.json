@@ -11,6 +11,7 @@
     "prisma:gen": "prisma generate"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.5.0",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "6.8.2",
     "@radix-ui/react-accordion": "^1.2.10",
@@ -46,6 +47,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "hono": "^4.7.9",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.511.0",
     "next": "14.2.8",
