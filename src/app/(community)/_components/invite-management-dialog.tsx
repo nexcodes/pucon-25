@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Check, Clock, X } from "lucide-react";
 import { DateToString } from "@/types/utils";
 import { CommunityInvite, User } from "@prisma/client";
+import { useLeaderUpdateInvite } from "../_api/use-leader-update-invite";
 
 interface InviteManagementDialogProps {
   open: boolean;
@@ -128,15 +129,7 @@ export function InviteManagementDialog({
                           "Sent by unknown user"
                         )}
                       </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200"
-                        // onClick={() => handleCancelInvite(invite.id)}
-                      >
-                        <X className="mr-1 h-3 w-3" />
-                        Cancel
-                      </Button>
+                      <Actions id={invite.id} />
                     </CardFooter>
                   </Card>
                 ))
@@ -256,5 +249,38 @@ export function InviteManagementDialog({
         </Tabs>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function Actions({ id }: { id: string }) {
+  const { mutate, isPending } = useLeaderUpdateInvite(id);
+
+  return (
+    <div className="flex items-center space-x-2">
+      <Button
+        variant="outline"
+        size="sm"
+        className="text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200"
+        onClick={() => {
+          mutate({ status: "DECLINED" });
+        }}
+        disabled={isPending}
+      >
+        <X className="mr-1 h-3 w-3" />
+        Reject
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        className="text-green-500 hover:text-green-600 hover:bg-green-50 border-green-200"
+        onClick={() => {
+          mutate({ status: "ACCEPTED" });
+        }}
+        disabled={isPending}
+      >
+        <Check className="mr-1 h-3 w-3" />
+        Accept
+      </Button>
+    </div>
   );
 }
