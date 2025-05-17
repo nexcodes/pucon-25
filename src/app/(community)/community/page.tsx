@@ -51,9 +51,8 @@ export default function CommunitiesPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-        <div className="w-8 h-8 border-2 border-t-green-400 border-gray-100 rounded-full animate-spin"></div>
-        <p className="mt-4 text-gray-500 font-medium">Loading communities</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner size="xl" />
       </div>
     );
   }
@@ -125,7 +124,8 @@ export default function CommunitiesPage() {
               <CardFooter className="flex justify-between border-t border-gray-100 pt-4">
                 <div className="flex items-center text-xs text-gray-500">
                   <Calendar className="h-3.5 w-3.5 mr-1" />
-                  Created {format(new Date(community.createdAt), "dd MMM, yyyy")}
+                  Created{" "}
+                  {format(new Date(community.createdAt), "dd MMM, yyyy")}
                 </div>
                 <div className="flex space-x-2">
                   <Link href={`/community/${community.id}`}>
