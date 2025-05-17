@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { Activity } from "@/lib/types"
+import type { Activity } from "@/types"
 
 const gasSchema = z.object({
   amount: z.coerce.number().positive("Gas consumption must be greater than 0"),
