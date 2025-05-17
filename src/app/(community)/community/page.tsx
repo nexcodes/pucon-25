@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { DateToString } from "@/types/utils";
 import { Community } from "@prisma/client";
 import { format } from "date-fns";
 import {
@@ -29,8 +30,6 @@ import { useState } from "react";
 import { useGetCommunities } from "../_api/use-get-communities";
 import { CommunityInviteDialog } from "../_components/community-invite-dialog";
 import { getNicheInfo } from "../_utils";
-import { DateToString } from "@/types/utils";
-import { useCurrentUser } from "@/app/hooks/use-current-user";
 
 export type CommunityWithCount = DateToString<Community> & {
   _count: {
@@ -43,8 +42,6 @@ export default function CommunitiesPage() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [selectedCommunity, setSelectedCommunity] =
     useState<CommunityWithCount | null>(null);
-
-  const { user } = useCurrentUser();
 
   const handleOpenInviteDialog = (community: CommunityWithCount) => {
     setSelectedCommunity(community);
