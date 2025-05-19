@@ -11,6 +11,7 @@
     "prisma:gen": "prisma generate"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.8.0",
     "@google/generative-ai": "^0.24.1",
     "@hono/zod-validator": "^0.5.0",
     "@hookform/resolvers": "^5.0.1",
